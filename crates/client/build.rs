@@ -1,0 +1,6 @@
+fn main() {
+    // Статически собранной SDL2 нужны функции реестра Windows (RegOpenKeyExW и др.)
+    if std::env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("windows") {
+        println!("cargo:rustc-link-lib=advapi32");
+    }
+}
