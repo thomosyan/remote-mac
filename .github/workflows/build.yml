@@ -5,34 +5,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  mac-host:
-    runs-on: macos-14   # Apple Silicon
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - name: Тесты протокола
-        run: cargo test -p proto
-      - name: Сборка хоста
-        run: cargo build --release -p host
-      - name: Упаковка в dmg
-        run: |
-          mkdir dmgroot
-          cp target/release/remote-host dmgroot/
-          cp README.md dmgroot/README.md
-          cat > dmgroot/start.command <<'EOF'
-          #!/bin/bash
-          cd "$(dirname "$0")"
-          xattr -d com.apple.quarantine ./remote-host 2>/dev/null
-          chmod +x ./remote-host
-          ./remote-host
-          EOF
-          chmod +x dmgroot/start.command
-          hdiutil create -volname RemoteHost -srcfolder dmgroot -ov -format UDZO remote-host.dmg
-      - uses: actions/upload-artifact@v4
-        with:
-          name: remote-host-macos
-          path: remote-host.dmg
-
   windows-client:
     runs-on: windows-latest
     steps:
@@ -44,6 +16,8 @@ jobs:
           choco install nasm -y
           "C:\Program Files\NASM" | Out-File -FilePath $env:GITHUB_PATH -Append
       - name: Сборка клиента
+        env:
+          CMAKE_POLICY_VERSION_MINIMUM: "3.5"
         run: cargo build --release -p client
       - uses: actions/upload-artifact@v4
         with:
