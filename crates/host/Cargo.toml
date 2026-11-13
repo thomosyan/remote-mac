@@ -1,0 +1,14 @@
+[package]
+name = "host"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "remote-host"
+path = "src/main.rs"
+
+[dependencies]
+proto = { path = "../proto" }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+core-graphics = "0.23"

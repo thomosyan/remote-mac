@@ -1,0 +1,15 @@
+[package]
+name = "client"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "remote-client"
+path = "src/main.rs"
+
+[dependencies]
+proto = { path = "../proto" }
+# окно, ввод и вывод картинки через GPU (YUV-текстура без конвертации в RGB на CPU)
+sdl2 = { version = "0.37", features = ["bundled", "static-link"] }
+# декодер H.264 (Cisco OpenH264, собирается из исходников; нужен NASM)
+openh264 = "0.6"
